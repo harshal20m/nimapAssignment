@@ -7,12 +7,12 @@ const { createClient } = require("@libsql/client");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ==================== MIDDLEWARE ====================
+// ==================== MIDDLEWARE ==================== //since we are using react for frontend we must need to enable body parsing
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ==================== TURSO DB ====================
+// ==================== TURSO DB ==================== //using this for online mysql hosting its free tier
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL,
   authToken: process.env.TURSO_AUTH_TOKEN,
