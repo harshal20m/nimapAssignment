@@ -7,6 +7,11 @@ const { createClient } = require("@libsql/client");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ==================== FIX BIGINT SERIALIZATION ==================== //
+BigInt.prototype.toJSON = function () {
+  return Number(this);
+};
+
 // ==================== MIDDLEWARE ==================== //since we are using react for frontend we must need to enable body parsing
 app.use(cors());
 app.use(bodyParser.json());

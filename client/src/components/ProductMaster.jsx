@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ProductMaster.css";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://nimapassignment.onrender.com/api";
 
 function ProductMaster() {
   const [products, setProducts] = useState([]);
@@ -158,11 +158,6 @@ function ProductMaster() {
   const handlePageSizeChange = (e) => {
     const newPageSize = parseInt(e.target.value);
     fetchProducts(1, newPageSize); // Reset to page 1 when changing page size
-  };
-
-  const getCategoryName = (categoryId) => {
-    const category = categories.find((cat) => cat.category_id === categoryId);
-    return category ? category.category_name : "N/A";
   };
 
   return (
