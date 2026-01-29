@@ -1,3 +1,11 @@
+## 🌐 Project Access
+
+You can view and explore the project here:
+
+👉 **[Link](https://nimaptask2.netlify.app/)**
+
+_(Replace this with your actual deployed link or GitHub repo)_
+
 # 📦 Product Management Application
 
 This is a full-stack product management application built using modern web technologies.
@@ -25,14 +33,6 @@ This is a full-stack product management application built using modern web techn
 - Pagination support for product listing
 - REST API architecture
 - Cloud-hosted database (no local DB dependency)
-
-## 🌐 Project Access
-
-You can view and explore the project here:
-
-👉 **[Link](https://nimaptask2.netlify.app/)**
-
-_(Replace this with your actual deployed link or GitHub repo)_
 
 ## 🧠 Purpose
 
