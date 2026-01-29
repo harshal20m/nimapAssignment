@@ -30,7 +30,7 @@ This is a full-stack product management application built using modern web techn
 
 You can view and explore the project here:
 
-👉 **[Project Live URL / GitHub Repository Link Here]**
+👉 **[Link](https://nimaptask2.netlify.app/)**
 
 _(Replace this with your actual deployed link or GitHub repo)_
 
