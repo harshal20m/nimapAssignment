@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./ProductMaster.css";
 
 const API_URL = "https://nimapassignment.onrender.com/api";
 
@@ -18,7 +17,6 @@ function ProductMaster() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Pagination state
   const [pagination, setPagination] = useState({
     currentPage: 1,
     pageSize: 10,
@@ -38,7 +36,7 @@ function ProductMaster() {
       const response = await axios.get(`${API_URL}/categories`);
       setCategories(response.data);
     } catch (err) {
-      console.error("Failed to fetch categories:", err);
+      console.error("Failed to fetch categories" + err);
     }
   };
 
@@ -53,7 +51,7 @@ function ProductMaster() {
       setPagination(response.data.pagination);
       setError("");
     } catch (err) {
-      setError("Failed to fetch products: " + err.message);
+      setError("Failed to fetch products" + err);
     } finally {
       setLoading(false);
     }
@@ -96,7 +94,7 @@ function ProductMaster() {
 
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
-      setError("Operation failed: " + err.response?.data?.error || err.message);
+      setError(err.response?.data?.error || "Operation failed");
     } finally {
       setLoading(false);
     }
@@ -115,7 +113,7 @@ function ProductMaster() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) {
+    if (!window.confirm("Delete this product?")) {
       return;
     }
 
@@ -124,7 +122,6 @@ function ProductMaster() {
       await axios.delete(`${API_URL}/products/${id}`);
       setSuccess("Product deleted successfully");
 
-      // If we deleted the last item on the current page and we're not on page 1, go back one page
       if (products.length === 1 && pagination.currentPage > 1) {
         fetchProducts(pagination.currentPage - 1, pagination.pageSize);
       } else {
@@ -133,7 +130,7 @@ function ProductMaster() {
 
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
-      setError("Delete failed: " + err.response?.data?.error || err.message);
+      setError(err.response?.data?.error || "Delete failed");
     } finally {
       setLoading(false);
     }
@@ -157,40 +154,54 @@ function ProductMaster() {
 
   const handlePageSizeChange = (e) => {
     const newPageSize = parseInt(e.target.value);
-    fetchProducts(1, newPageSize); // Reset to page 1 when changing page size
+    fetchProducts(1, newPageSize);
   };
 
   return (
-    <div className="product-master">
-      <h2>Product Master</h2>
+    <div>
+      <h2 className="text-xl font-semibold mb-4">Product Management</h2>
 
-      {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
 
-      <div className="form-container">
-        <h3>{editingId ? "Edit Product" : "Add New Product"}</h3>
+      {success && (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
+          {success}
+        </div>
+      )}
+
+      <div className="bg-gray-50 border rounded p-4 mb-6">
+        <h3 className="font-medium mb-3">
+          {editingId ? "Edit Product" : "Add New Product"}
+        </h3>
         <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="product_name">Product Name *</label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Product Name *
+              </label>
               <input
                 type="text"
-                id="product_name"
                 name="product_name"
                 value={formData.product_name}
                 onChange={handleInputChange}
-                placeholder="Enter product name"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="category_id">Category *</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Category *
+              </label>
               <select
-                id="category_id"
                 name="category_id"
                 value={formData.category_id}
                 onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                 required
               >
                 <option value="">Select Category</option>
@@ -205,46 +216,48 @@ function ProductMaster() {
               </select>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="price">Price</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Price
+              </label>
               <input
                 type="number"
-                id="price"
                 name="price"
                 value={formData.price}
                 onChange={handleInputChange}
-                placeholder="Enter price"
                 step="0.01"
                 min="0"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="description">Description</label>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
             <textarea
-              id="description"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
-              placeholder="Enter product description"
-              rows="3"
+              rows="2"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             />
           </div>
 
-          <div className="form-actions">
+          <div className="flex gap-2">
             <button
               type="submit"
-              className="btn btn-primary"
               disabled={loading}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
-              {editingId ? "Update" : "Create"} Product
+              {editingId ? "Update" : "Create"}
             </button>
             {editingId && (
               <button
                 type="button"
-                className="btn btn-secondary"
                 onClick={handleCancel}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
               >
                 Cancel
               </button>
@@ -253,83 +266,104 @@ function ProductMaster() {
         </form>
       </div>
 
-      <div className="table-container">
-        <div className="table-header">
-          <h3>Products List</h3>
-          <div className="page-size-selector">
-            <label>Show: </label>
+      <div>
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="font-medium">Products List</h3>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Show:</label>
             <select
               value={pagination.pageSize}
               onChange={handlePageSizeChange}
               disabled={loading}
+              className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
             >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
             </select>
-            <span> per page</span>
           </div>
         </div>
 
-        {loading && <div className="loading">Loading...</div>}
+        {loading && <p className="text-gray-500 mb-3">Loading...</p>}
 
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Product ID</th>
-              <th>Product Name</th>
-              <th>Category ID</th>
-              <th>Category Name</th>
-              <th>Price</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.length === 0 ? (
+        <div className="border rounded overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan="7" className="no-data">
-                  No products found
-                </td>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Product ID
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Product Name
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Category ID
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Category Name
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Price
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Description
+                </th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              products.map((product) => (
-                <tr key={product.product_id}>
-                  <td>{product.product_id}</td>
-                  <td>{product.product_name}</td>
-                  <td>{product.category_id}</td>
-                  <td>{product.category_name || "N/A"}</td>
-                  <td>
-                    {product.price
-                      ? `₹${parseFloat(product.price).toFixed(2)}`
-                      : "-"}
-                  </td>
-                  <td>{product.description || "-"}</td>
-                  <td className="actions">
-                    <button
-                      className="btn-edit"
-                      onClick={() => handleEdit(product)}
-                      disabled={loading}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDelete(product.product_id)}
-                      disabled={loading}
-                    >
-                      Delete
-                    </button>
+            </thead>
+            <tbody className="divide-y">
+              {products.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="px-4 py-8 text-center text-gray-500"
+                  >
+                    No products found
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                products.map((product) => (
+                  <tr key={product.product_id} className="hover:bg-gray-50">
+                    <td className="px-4 py-2">{product.product_id}</td>
+                    <td className="px-4 py-2">{product.product_name}</td>
+                    <td className="px-4 py-2">{product.category_id}</td>
+                    <td className="px-4 py-2">
+                      {product.category_name || "N/A"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {product.price
+                        ? `₹ ${parseFloat(product.price).toFixed(2)}`
+                        : "-"}
+                    </td>
+                    <td className="px-4 py-2">{product.description || "-"}</td>
+                    <td className="px-4 py-2">
+                      <button
+                        onClick={() => handleEdit(product)}
+                        disabled={loading}
+                        className="text-blue-600 hover:text-blue-800 mr-3 disabled:opacity-50"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product.product_id)}
+                        disabled={loading}
+                        className="text-red-600 hover:text-red-800 disabled:opacity-50"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        <div className="pagination">
-          <div className="pagination-info">
+        <div className="flex justify-between items-center mt-4 text-sm">
+          <div className="text-gray-600">
             Showing{" "}
             {products.length > 0
               ? (pagination.currentPage - 1) * pagination.pageSize + 1
@@ -342,37 +376,37 @@ function ProductMaster() {
             of {pagination.totalRecords} products
           </div>
 
-          <div className="pagination-controls">
+          <div className="flex gap-2">
             <button
               onClick={() => handlePageChange(1)}
               disabled={!pagination.hasPreviousPage || loading}
-              className="btn-pagination"
+              className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               First
             </button>
             <button
               onClick={() => handlePageChange(pagination.currentPage - 1)}
               disabled={!pagination.hasPreviousPage || loading}
-              className="btn-pagination"
+              className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
 
-            <span className="page-numbers">
+            <span className="px-3 py-1 text-gray-700">
               Page {pagination.currentPage} of {pagination.totalPages || 1}
             </span>
 
             <button
               onClick={() => handlePageChange(pagination.currentPage + 1)}
               disabled={!pagination.hasNextPage || loading}
-              className="btn-pagination"
+              className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>
             <button
               onClick={() => handlePageChange(pagination.totalPages)}
               disabled={!pagination.hasNextPage || loading}
-              className="btn-pagination"
+              className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Last
             </button>
